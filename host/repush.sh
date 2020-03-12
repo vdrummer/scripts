@@ -338,7 +338,7 @@ function push {
     directory=""
   fi
 
-  placeholder_basename="$(basename "$1")"
+  placeholder_basename="$(basename "$1" | sed 's/PDF$/pdf/')"
 
   # Since the WebUI doesn't accept directories, we're creating a PDF placeholder
   # fs entry, who's metadata we'll then alter to that of a directory fs entry
