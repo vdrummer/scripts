@@ -512,7 +512,11 @@ if [ "$REMOTE" ]; then
     exit -1
   fi
 
-  ssh -o ConnectTimeout=5 -M -S remarkable-ssh -q -f -L "$PORT":"$WEBUI_ADDRESS" root@"$SSH_ADDRESS" -N;
+  # FIXME When using socket here, connection to socket is lost
+  ssh root@"$SSH_ADDRESS" "/sbin/ip addr add 10.11.99.1/32 dev usb0"
+  echo "You can now enable the USB web interface"
+  read
+  ssh -o ConnectTimeout=1 -M -S remarkable-ssh -q -f -L "$PORT":"$WEBUI_ADDRESS" root@"$SSH_ADDRESS" -N
   SSH_RET="$?"
 
   WEBUI_ADDRESS="localhost:$PORT"
