@@ -307,10 +307,13 @@ if [ "$REMOTE" ]; then
     exit 1
   fi
 
-  # FIXME When using socket here, connection to socket is lost
-  ssh root@"$SSH_ADDRESS" "/sbin/ip addr add 10.11.99.1/32 dev usb0"
-  echo "You can now enable the USB web interface"
-  read
+  #TODO Able to use socket?
+  if [ $(ssh root@$SSH_ADDRESS "grep WebInterface /home/root/.config/remarkable/xochitl.conf | cut -d= -f 2") = "false" ]; then
+    ssh root@"$SSH_ADDRESS" "/sbin/ip addr add 10.11.99.1/32 dev usb0"
+    echo "Please enable the UBS web interface (Settings -> Storage)"
+    echo "Press return to continue"
+    read
+  fi
   ssh -o ConnectTimeout=1 -M -S remarkable-ssh -q -f -L "$PORT":"$WEBUI_ADDRESS" root@"$SSH_ADDRESS" -N;
   SSH_RET="$?"
 
